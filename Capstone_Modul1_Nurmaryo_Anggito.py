@@ -42,11 +42,12 @@ def ShowMainMenuFunction() :
     print('\n')
     print('Menu Gudang')
     print('1. Cek Stok Gudang.')
-    print('2. Tambah Item ke Gudang.')
-    print('3. Update Stok')
-    print('4. Hapus Data Item')
-    print('5. Keluar Program')
-    Menu = str(input('Pilih Menu (1-5) : '))
+    print('2. Cari Data')
+    print('3. Tambah Item ke Gudang.')
+    print('4. Update Stok')
+    print('5. Hapus Data Item')
+    print('6. Keluar Program')
+    Menu = str(input('Pilih Menu (1-6) : '))
     return Menu                 #return kode untuk pilih menu
 
 #fungsi tampilkan tabel data
@@ -150,7 +151,7 @@ def SelectItemFunction(cekmenu) : #parameter untuk memilih menu
             IdBarang = input('Masukan ID Barang yang akan diupdate : ').upper()
         ItemSelected = []
         ID = any(item['IDBarang'] == IdBarang for item in ListBarang)       #cek value dari idbarang untuk setiap item dari list
-        if ID :                                                             #pilih data sesuai input id barang
+        if ID :                                                             
             ItemSelected = [item for item in ListBarang if item.get('IDBarang') == IdBarang]
             break
         else :
@@ -210,7 +211,18 @@ def UpdateItemFunction(Kode,ItemUpdate) :
 #kembali ke menu sebelumnya
 def ReturntoMenuFunction(Menu) :
     match Menu :
-        case 'add' :            #untuk memilih menu yang dipakai
+        case 'read' :
+            while True :
+                BackToAdd = input('Apakah ada data yang akan dicari lagi? (y/n) : ')    
+                if BackToAdd.upper() == 'Y' :
+                    break
+                elif BackToAdd.upper() == 'N' :
+                    BacktoMainMenuFunction()
+                    break
+                else :
+                    print('Inputan anda salah.')
+                    continue
+        case 'add' :           
             while True :
                 BackToAdd = input('Apakah ada data yang akan ditambah lagi? (y/n) : ')    
                 if BackToAdd.upper() == 'Y' :
@@ -244,22 +256,36 @@ def ReturntoMenuFunction(Menu) :
                     print('Inputan anda salah.')
                     continue
 
+#membuat list dari list utama ketika value ada di list utama
+def SelectItemsbyValueFunction(list, value):
+    selectedList = [item for item in list if any(value.upper() in str(x).upper() for x in item.values())]
+    return selectedList
+    
+
 #code utama
 while True :
     Menu = ShowMainMenuFunction()  #menu utama
     match Menu :
 
-        #read data
         # tampilkan data dummy/default
         case '1' :
-            print('Menu Utama Gudang')
             print('Daftar Stok Barang')
             ShowdataFunction(ListBarang)
             BacktoMainMenuFunction()
- 
+
+        #tampilkan data sesuai filter input
+        case '2' :
+            print('Menu Cari Data')
+            filter = input('Masukan data yang akan dicari : ')
+            selectedItem = SelectItemsbyValueFunction(ListBarang,filter.upper())
+            if len(selectedItem) > 0 :
+                ShowdataFunction(selectedItem)
+            elif len(selectedItem) == 0 :
+                print('Data tidak ada')
+            ReturntoMenuFunction('read')
  
         #add new item
-        case '2' :            
+        case '3' :            
             ListNewItem = []        #list sementara
             print('Menu menambahkan barang baru')
             print('Daftar Stok Barang yang baru') #tampilkan data awal
@@ -281,7 +307,7 @@ while True :
                 continue
 
         #update hanya bisa update stok barang
-        case '3' :
+        case '4' :
             ListItemUpdate = []
             print('Menu update stok item ')
             ShowdataFunction(ListBarang)        #tampilkan data awal
@@ -312,7 +338,7 @@ while True :
                     continue
             
         #delete item
-        case '4' :
+        case '5' :
             while True :
                 ListItemDelete = []
                 print('Menu menghapus barang di gudang')
@@ -335,11 +361,11 @@ while True :
                         continue
                 
         #exit program
-        case '5' :
+        case '6' :
             print('Terima kasih sudah menggunakan program ini')
             sys.exit()
         
-        #other jika input menu selain 1-5 akan kembali ke menu utama
+        #other jika input menu selain 1-6 akan kembali ke menu utama
         case _ :
             print('Menu tidak ada')
             BacktoMainMenuFunction()
