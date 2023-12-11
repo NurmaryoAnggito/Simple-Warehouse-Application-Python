@@ -301,8 +301,6 @@ while True :
             if Confirmation.upper() == 'Y' :
                 for item in ListBarang : 
                     if item.get('IDBarang') == ItemUpdate.get('IDBarang') :
-                        print(f'ItemUpdate + {ItemUpdate}')
-                        print(f'updateditem + {UpdatedItem}')
                         item.update(UpdatedItem)                                 
                 ShowdataFunction(ListBarang)
                 ReturntoMenuFunction('update')
