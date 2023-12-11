@@ -40,7 +40,7 @@ ListBarang = [{
 #fungsi tampilkan menu utama
 def ShowMainMenuFunction() :
     print('\n')
-    print('Menu Gudang')
+    print('Main Menu Gudang')
     print('1. Cek Stok Gudang.')
     print('2. Cari Data')
     print('3. Tambah Item ke Gudang.')
@@ -48,6 +48,7 @@ def ShowMainMenuFunction() :
     print('5. Hapus Data Item')
     print('6. Keluar Program')
     Menu = str(input('Pilih Menu (1-6) : '))
+    print('\n')
     return Menu                 #return kode untuk pilih menu
 
 #fungsi tampilkan tabel data
@@ -167,13 +168,13 @@ def UpdateItemFunction(Kode,ItemUpdate) :
                 kategori = SelectItemCategoryFunction()
                 for item in ListBarang :
                     if item == ItemUpdate :
-                        item['Kategori'] = kategori
+                        item['Kategori'] = kategori.upper()
                         return item
             case 2 :    #nama
                 for item in ListBarang :        
                     if item == ItemUpdate :
                         value = input('Masukan nama pengganti : ')
-                        item['NamaBarang'] = value
+                        item['NamaBarang'] = value.upper()
                         return item
             case 3 :    #stok
                 for item in ListBarang :
@@ -201,7 +202,7 @@ def UpdateItemFunction(Kode,ItemUpdate) :
                 for item in ListBarang :        
                     if item == ItemUpdate :
                         value = input('Masukan merk pengganti : ')
-                        item['Merk'] = value
+                        item['Merk'] = value.upper()
                         return item
             case _ :    #selain 1-5
                 print('Menu tidak ada')
@@ -339,26 +340,25 @@ while True :
             
         #delete item
         case '5' :
-            while True :
-                ListItemDelete = []
-                print('Menu menghapus barang di gudang')
-                ShowdataFunction(ListBarang)        #tampilkan data awal
-                ItemDelete = SelectItemFunction('delete')     #pilih item yang akan dihapus
-                ListItemDelete.append(list(ItemDelete.values()))    
-                print('Barang yang akan dihapus')           #tampilkan item yang akan dihapus
-                print(tabulate(ListItemDelete,headers=KeyDictBarang))
-                AddConfirmation = input('Apakah akang menghapus data diatas? (y/n) : ')
-                if AddConfirmation.upper() == 'Y' :     #konfirmasi delete
-                        ListBarang.remove(ItemDelete)
-                        print('Daftar data yang telah dihapus')
-                        ShowdataFunction(ListBarang)
-                        ReturntoMenuFunction('delete')
-                elif AddConfirmation.upper() == 'N' :
-                        BacktoMainMenuFunction()
-                        break
-                else :
-                        print('Inputan anda salah.')
-                        continue
+            ListItemDelete = []
+            print('Menu menghapus barang di gudang')
+            ShowdataFunction(ListBarang)        #tampilkan data awal
+            ItemDelete = SelectItemFunction('delete')     #pilih item yang akan dihapus
+            ListItemDelete.append(list(ItemDelete.values()))    
+            print('Barang yang akan dihapus')           #tampilkan item yang akan dihapus
+            print(tabulate(ListItemDelete,headers=KeyDictBarang))
+            AddConfirmation = input('Apakah akang menghapus data diatas? (y/n) : ')
+            if AddConfirmation.upper() == 'Y' :     #konfirmasi delete
+                    ListBarang.remove(ItemDelete)
+                    print('Daftar data yang telah dihapus')
+                    ShowdataFunction(ListBarang)
+                    ReturntoMenuFunction('delete')
+            elif AddConfirmation.upper() == 'N' :
+                    BacktoMainMenuFunction()
+                    break
+            else :
+                    print('Inputan anda salah.')
+                    continue
                 
         #exit program
         case '6' :
