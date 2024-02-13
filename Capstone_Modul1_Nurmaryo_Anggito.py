@@ -80,7 +80,7 @@ def BacktoMainMenuFunction() :
             print('Inputan anda salah.')
             continue
 
-#fungsi pilih kategori untuk update dan delete
+#fungsi pilih kategori untuk add dan update
 #kategori berfungsi untuk membuat idbarang
 def SelectItemCategoryFunction() :
     print('Pilih Kategori')
@@ -214,10 +214,10 @@ def ReturntoMenuFunction(Menu) :
     match Menu :
         case 'read' :
             while True :
-                BackToAdd = input('Apakah ada data yang akan dicari lagi? (y/n) : ')    
-                if BackToAdd.upper() == 'Y' :
+                Back1 = input('Apakah ada data yang akan dicari lagi? (y/n) : ')    
+                if Back1.upper() == 'Y' :
                     break
-                elif BackToAdd.upper() == 'N' :
+                elif Back1.upper() == 'N' :
                     BacktoMainMenuFunction()
                     break
                 else :
@@ -225,10 +225,10 @@ def ReturntoMenuFunction(Menu) :
                     continue
         case 'add' :           
             while True :
-                BackToAdd = input('Apakah ada data yang akan ditambah lagi? (y/n) : ')    
-                if BackToAdd.upper() == 'Y' :
+                Back2 = input('Apakah ada data yang akan ditambah lagi? (y/n) : ')    
+                if Back2.upper() == 'Y' :
                     break
-                elif BackToAdd.upper() == 'N' :
+                elif Back2.upper() == 'N' :
                     BacktoMainMenuFunction()
                     break
                 else :
@@ -236,10 +236,10 @@ def ReturntoMenuFunction(Menu) :
                     continue
         case 'update' :
             while True :
-                BackToAdd = input('Apakah ada data yang akan diupdate lagi? (y/n) : ')    
-                if BackToAdd.upper() == 'Y' :
+                Back3 = input('Apakah ada data yang akan diupdate lagi? (y/n) : ')    
+                if Back3.upper() == 'Y' :
                     break
-                elif BackToAdd.upper() == 'N' :
+                elif Back3.upper() == 'N' :
                     BacktoMainMenuFunction()
                     break
                 else :
@@ -247,10 +247,10 @@ def ReturntoMenuFunction(Menu) :
                     continue
         case 'delete' :
             while True :
-                BackToAdd = input('Apakah ada data yang akan dihapus lagi? (y/n) : ')    
-                if BackToAdd.upper() == 'Y' :
+                Back4 = input('Apakah ada data yang akan dihapus lagi? (y/n) : ')    
+                if Back4.upper() == 'Y' :
                     break
-                elif BackToAdd.upper() == 'N' :
+                elif Back4.upper() == 'N' :
                     BacktoMainMenuFunction()
                     break
                 else :
@@ -276,89 +276,93 @@ while True :
 
         #tampilkan data sesuai filter input
         case '2' :
-            print('Menu Cari Data')
-            filter = input('Masukan data yang akan dicari : ')
-            selectedItem = SelectItemsbyValueFunction(ListBarang,filter.upper())
-            if len(selectedItem) > 0 :
-                ShowdataFunction(selectedItem)
-            elif len(selectedItem) == 0 :
-                print('Data tidak ada')
-            ReturntoMenuFunction('read')
+            while True :
+                print('Menu Cari Data')
+                filter = input('Masukan data yang akan dicari : ')
+                selectedItem = SelectItemsbyValueFunction(ListBarang,filter.upper())
+                if len(selectedItem) > 0 :
+                    ShowdataFunction(selectedItem)
+                elif len(selectedItem) == 0 :
+                    print('Data tidak ada')
+                ReturntoMenuFunction('read')
  
         #add new item
-        case '3' :            
-            ListNewItem = []        #list sementara
-            print('Menu menambahkan barang baru')
-            print('Daftar Stok Barang yang baru') #tampilkan data awal
-            ShowdataFunction(ListBarang)
-            NewItem = AddNewItemFunction()
-            ListNewItem.append(NewItem)
-            print('Barang yang akan ditambahkan')       #tampilkan data yang akan ditambahkan
-            print(tabulate(ListNewItem,headers=KeyDictBarang))
-            AddConfirmation = input('Menambahkan data barang baru sesuai data diatas? (y/n) : ')  #konfirmasi tambah data ke list utama
-            if AddConfirmation.upper() == 'Y' :
-                ListBarang.append(dict(zip(KeyDictBarang,NewItem)))         #casting list jadi dictionary dan ditambahkan ke list utama
+        case '3' :      
+            while True :      
+                ListNewItem = []        #list sementara
+                print('Menu menambahkan barang baru')
+                print('Daftar Stok Barang yang baru') #tampilkan data awal
                 ShowdataFunction(ListBarang)
-                ReturntoMenuFunction('add')
-            elif AddConfirmation.upper() == 'N' :
-                BacktoMainMenuFunction()
-                break
-            else :
-                print('Inputan anda salah.')
-                continue
+                NewItem = AddNewItemFunction()
+                ListNewItem.append(NewItem)
+                print('Barang yang akan ditambahkan')       #tampilkan data yang akan ditambahkan
+                print(tabulate(ListNewItem,headers=KeyDictBarang))
+                AddConfirmation = input('Menambahkan data barang baru sesuai data diatas? (y/n) : ')  #konfirmasi tambah data ke list utama
+                if AddConfirmation.upper() == 'Y' :
+                    ListBarang.append(dict(zip(KeyDictBarang,NewItem)))         #casting list jadi dictionary dan ditambahkan ke list utama
+                    ShowdataFunction(ListBarang)
+                    ReturntoMenuFunction('add')
+                elif AddConfirmation.upper() == 'N' :
+                    BacktoMainMenuFunction()
+                    break
+                else :
+                    print('Inputan anda salah.')
+                    continue
 
         #update hanya bisa update stok barang
         case '4' :
-            ListItemUpdate = []
-            print('Menu update stok item ')
-            ShowdataFunction(ListBarang)        #tampilkan data awal
-            ItemUpdate = SelectItemFunction('update')     #pilih item yang akan diupdate sesuai input idbarang
-            ListItemUpdate.append(list(ItemUpdate.values()))
-            print('Barang yang akan diupdate') #tampilkan item yang akan di update
-            print(tabulate(ListItemUpdate,headers=KeyDictBarang))
-            print('Pilih Kolom')
-            print('1. KATEGORI BARANG')
-            print('2. NAMA BARANG')
-            print('3. STOK BARANG')
-            print('4. HARGA BARANG')
-            print('5. MERK BARANG')
-            MenuUpdate = int(input('Pilih Kolom yang akan diupdate : '))
-            UpdatedItem = UpdateItemFunction(MenuUpdate,ItemUpdate)
-            Confirmation = input('Apakah akan update data diatas? (y/n) : ') #konfirmasi update item
-            if Confirmation.upper() == 'Y' :
-                for item in ListBarang : 
-                    if item.get('IDBarang') == ItemUpdate.get('IDBarang') :
-                        item.update(UpdatedItem)                                 
-                ShowdataFunction(ListBarang)
-                ReturntoMenuFunction('update')
-            elif Confirmation.upper() == 'N' :
-                    BacktoMainMenuFunction()
-                    break
-            else :
-                    print('Inputan anda salah.')
-                    continue
+            while True :
+                ListItemUpdate = []
+                print('Menu update stok item ')
+                ShowdataFunction(ListBarang)        #tampilkan data awal
+                ItemUpdate = SelectItemFunction('update')     #pilih item yang akan diupdate sesuai input idbarang
+                ListItemUpdate.append(list(ItemUpdate.values()))
+                print('Barang yang akan diupdate') #tampilkan item yang akan di update
+                print(tabulate(ListItemUpdate,headers=KeyDictBarang))
+                print('Pilih Kolom')
+                print('1. KATEGORI BARANG')
+                print('2. NAMA BARANG')
+                print('3. STOK BARANG')
+                print('4. HARGA BARANG')
+                print('5. MERK BARANG')
+                MenuUpdate = int(input('Pilih Kolom yang akan diupdate : '))
+                UpdatedItem = UpdateItemFunction(MenuUpdate,ItemUpdate)
+                Confirmation = input('Apakah akan update data diatas? (y/n) : ') #konfirmasi update item
+                if Confirmation.upper() == 'Y' :
+                    for item in ListBarang : 
+                        if item.get('IDBarang') == ItemUpdate.get('IDBarang') :
+                            item.update(UpdatedItem)                                 
+                    ShowdataFunction(ListBarang)
+                    ReturntoMenuFunction('update')
+                elif Confirmation.upper() == 'N' :
+                        BacktoMainMenuFunction()
+                        break
+                else :
+                        print('Inputan anda salah.')
+                        continue
             
         #delete item
         case '5' :
-            ListItemDelete = []
-            print('Menu menghapus barang di gudang')
-            ShowdataFunction(ListBarang)        #tampilkan data awal
-            ItemDelete = SelectItemFunction('delete')     #pilih item yang akan dihapus
-            ListItemDelete.append(list(ItemDelete.values()))    
-            print('Barang yang akan dihapus')           #tampilkan item yang akan dihapus
-            print(tabulate(ListItemDelete,headers=KeyDictBarang))
-            AddConfirmation = input('Apakah akang menghapus data diatas? (y/n) : ')
-            if AddConfirmation.upper() == 'Y' :     #konfirmasi delete
-                    ListBarang.remove(ItemDelete)
-                    print('Daftar data yang telah dihapus')
-                    ShowdataFunction(ListBarang)
-                    ReturntoMenuFunction('delete')
-            elif AddConfirmation.upper() == 'N' :
-                    BacktoMainMenuFunction()
-                    break
-            else :
-                    print('Inputan anda salah.')
-                    continue
+            while True :
+                ListItemDelete = []
+                print('Menu menghapus barang di gudang')
+                ShowdataFunction(ListBarang)        #tampilkan data awal
+                ItemDelete = SelectItemFunction('delete')     #pilih item yang akan dihapus
+                ListItemDelete.append(list(ItemDelete.values()))    
+                print('Barang yang akan dihapus')           #tampilkan item yang akan dihapus
+                print(tabulate(ListItemDelete,headers=KeyDictBarang))
+                AddConfirmation = input('Apakah akang menghapus data diatas? (y/n) : ')
+                if AddConfirmation.upper() == 'Y' :     #konfirmasi delete
+                        ListBarang.remove(ItemDelete)
+                        print('Daftar data yang telah dihapus')
+                        ShowdataFunction(ListBarang)
+                        ReturntoMenuFunction('delete')
+                elif AddConfirmation.upper() == 'N' :
+                        BacktoMainMenuFunction()
+                        break
+                else :
+                        print('Inputan anda salah.')
+                        continue
                 
         #exit program
         case '6' :
