@@ -72,13 +72,13 @@ def BacktoMainMenuFunction() :
     while True :
         Back = input('Kembali ke menu utama? (y/n) : ')
         if Back.upper() == 'Y' :
-            break
+            return True
         elif Back.upper() == 'N' :
             print('Anda keluar dari program.')
             sys.exit()                              #keluar dari program
         else :
             print('Inputan anda salah.')
-            continue
+            
 
 #fungsi pilih kategori untuk add dan update
 #kategori berfungsi untuk membuat idbarang
@@ -210,52 +210,49 @@ def UpdateItemFunction(Kode,ItemUpdate) :
 
 
 #kembali ke menu sebelumnya
-def ReturntoMenuFunction(Menu) :
-    match Menu :
-        case 'read' :
-            while True :
-                Back1 = input('Apakah ada data yang akan dicari lagi? (y/n) : ')    
-                if Back1.upper() == 'Y' :
-                    break
-                elif Back1.upper() == 'N' :
-                    BacktoMainMenuFunction()
-                    break
-                else :
-                    print('Inputan anda salah.')
-                    continue
-        case 'add' :           
-            while True :
-                Back2 = input('Apakah ada data yang akan ditambah lagi? (y/n) : ')    
-                if Back2.upper() == 'Y' :
-                    break
-                elif Back2.upper() == 'N' :
-                    BacktoMainMenuFunction()
-                    break
-                else :
-                    print('Inputan anda salah.')
-                    continue
-        case 'update' :
-            while True :
-                Back3 = input('Apakah ada data yang akan diupdate lagi? (y/n) : ')    
-                if Back3.upper() == 'Y' :
-                    break
-                elif Back3.upper() == 'N' :
-                    BacktoMainMenuFunction()
-                    break
-                else :
-                    print('Inputan anda salah.')
-                    continue
-        case 'delete' :
-            while True :
-                Back4 = input('Apakah ada data yang akan dihapus lagi? (y/n) : ')    
-                if Back4.upper() == 'Y' :
-                    break
-                elif Back4.upper() == 'N' :
-                    BacktoMainMenuFunction()
-                    break
-                else :
-                    print('Inputan anda salah.')
-                    continue
+def ReturntoMenuFunction(Menu):
+    while True:
+        try:
+            match Menu:
+                case 'read':
+                    Back1 = input('Apakah ada data yang akan dicari lagi? (y/n) : ')
+                    if Back1.upper() == 'Y':
+                        break
+                    elif Back1.upper() == 'N':
+                        BacktoMainMenuFunction()
+                        return
+                    else:
+                        raise ValueError('Inputan anda salah.')
+                case 'add':
+                    Back2 = input('Apakah ada data yang akan ditambah lagi? (y/n) : ')
+                    if Back2.upper() == 'Y':
+                        break
+                    elif Back2.upper() == 'N':
+                        BacktoMainMenuFunction()
+                        return
+                    else:
+                        raise ValueError('Inputan anda salah.')
+                case 'update':
+                    Back3 = input('Apakah ada data yang akan diupdate lagi? (y/n) : ')
+                    if Back3.upper() == 'Y':
+                        break
+                    elif Back3.upper() == 'N':
+                        BacktoMainMenuFunction()
+                        return
+                    else:
+                        raise ValueError('Inputan anda salah.')
+                case 'delete':
+                    Back4 = input('Apakah ada data yang akan dihapus lagi? (y/n) : ')
+                    if Back4.upper() == 'Y':
+                        break
+                    elif Back4.upper() == 'N':
+                        BacktoMainMenuFunction()
+                        return
+                    else:
+                        raise ValueError('Inputan anda salah.')
+            break
+        except ValueError as ve:
+            print(ve)
 
 #membuat list dari list utama ketika value ada di list utama
 def SelectItemsbyValueFunction(list, value):
@@ -266,17 +263,17 @@ def SelectItemsbyValueFunction(list, value):
 #code utama
 while True :
     Menu = ShowMainMenuFunction()  #menu utama
-    match Menu :
+    while True :
+        match Menu :
+            # tampilkan data dummy/default
+            case '1' :
+                print('Daftar Stok Barang')
+                ShowdataFunction(ListBarang)
+                if BacktoMainMenuFunction() :
+                    break
 
-        # tampilkan data dummy/default
-        case '1' :
-            print('Daftar Stok Barang')
-            ShowdataFunction(ListBarang)
-            BacktoMainMenuFunction()
-
-        #tampilkan data sesuai filter input
-        case '2' :
-            while True :
+            #tampilkan data sesuai filter input
+            case '2' :
                 print('Menu Cari Data')
                 filter = input('Masukan data yang akan dicari : ')
                 selectedItem = SelectItemsbyValueFunction(ListBarang,filter.upper())
@@ -285,10 +282,10 @@ while True :
                 elif len(selectedItem) == 0 :
                     print('Data tidak ada')
                 ReturntoMenuFunction('read')
- 
-        #add new item
-        case '3' :      
-            while True :      
+                break
+    
+            #add new item
+            case '3' :      
                 ListNewItem = []        #list sementara
                 print('Menu menambahkan barang baru')
                 print('Daftar Stok Barang yang baru') #tampilkan data awal
@@ -302,16 +299,16 @@ while True :
                     ListBarang.append(dict(zip(KeyDictBarang,NewItem)))         #casting list jadi dictionary dan ditambahkan ke list utama
                     ShowdataFunction(ListBarang)
                     ReturntoMenuFunction('add')
-                elif AddConfirmation.upper() == 'N' :
-                    BacktoMainMenuFunction()
                     break
+                elif AddConfirmation.upper() == 'N' :
+                    if BacktoMainMenuFunction() :
+                        break
                 else :
                     print('Inputan anda salah.')
                     continue
 
-        #update hanya bisa update stok barang
-        case '4' :
-            while True :
+            #update hanya bisa update stok barang
+            case '4' :
                 ListItemUpdate = []
                 print('Menu update stok item ')
                 ShowdataFunction(ListBarang)        #tampilkan data awal
@@ -334,16 +331,16 @@ while True :
                             item.update(UpdatedItem)                                 
                     ShowdataFunction(ListBarang)
                     ReturntoMenuFunction('update')
+                    break
                 elif Confirmation.upper() == 'N' :
-                        BacktoMainMenuFunction()
+                    if BacktoMainMenuFunction() :
                         break
                 else :
-                        print('Inputan anda salah.')
-                        continue
-            
-        #delete item
-        case '5' :
-            while True :
+                    print('Inputan anda salah.')
+                    continue
+                
+            #delete item
+            case '5' :
                 ListItemDelete = []
                 print('Menu menghapus barang di gudang')
                 ShowdataFunction(ListBarang)        #tampilkan data awal
@@ -353,23 +350,25 @@ while True :
                 print(tabulate(ListItemDelete,headers=KeyDictBarang))
                 AddConfirmation = input('Apakah akang menghapus data diatas? (y/n) : ')
                 if AddConfirmation.upper() == 'Y' :     #konfirmasi delete
-                        ListBarang.remove(ItemDelete)
-                        print('Daftar data yang telah dihapus')
-                        ShowdataFunction(ListBarang)
-                        ReturntoMenuFunction('delete')
+                    ListBarang.remove(ItemDelete)
+                    print('Daftar data yang telah dihapus')
+                    ShowdataFunction(ListBarang)
+                    ReturntoMenuFunction('delete')
+                    break
                 elif AddConfirmation.upper() == 'N' :
-                        BacktoMainMenuFunction()
+                    if BacktoMainMenuFunction() :
                         break
                 else :
-                        print('Inputan anda salah.')
-                        continue
+                    print('Inputan anda salah.')
+                    continue
                 
-        #exit program
-        case '6' :
-            print('Terima kasih sudah menggunakan program ini')
-            sys.exit()
-        
-        #other jika input menu selain 1-6 akan kembali ke menu utama
-        case _ :
-            print('Menu tidak ada')
-            BacktoMainMenuFunction()
+            #exit program
+            case '6' :
+                print('Terima kasih sudah menggunakan program ini')
+                sys.exit()
+            
+            #other jika input menu selain 1-6 akan kembali ke menu utama
+            case _ :
+                print('Menu tidak ada')
+                if BacktoMainMenuFunction() :
+                    break
